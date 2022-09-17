@@ -1,0 +1,67 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+
+    <h1>Mine profile</h1>
+    <ul class="list-articles">
+    <li>
+        <div class="alert alert-warning mt-2">
+            <div class="article-panel">
+                <div class="article-panel">
+                    <p class="first">Login: {{ user_info.slug }}</p>
+                    <p class="last"><a href="{% url 'profile_info' user_info.slug %}">Change profile info</a></p>
+                </div>
+                {% if user_info.avatar %}
+                    <p><img class="img-article-left thumb" src="{{ user_info.avatar.url }}" alt="Mine Avatar"></p>
+                {% else %}
+                    <p><img class="img-article-left thumb" src="{% static 'main/images/user.png' %}" width="300"
+                            height="300" alt="Mine Avatar"></p>
+                {% endif %}
+                <div>
+                    <p><small><em>Full
+                        name: </em></small><strong>{{ user_info.first_name }} {{ user_info.last_name }} </strong>
+                    </p>
+                    <p><small><em>Email: </em></small>{{ user_info.email }}</p>
+                    <p><small><em>About my: </em></small>{{ user_info.about_user }}</p>
+                </div>
+            </div>
+            <div class="article-panel">
+                <p class="last">Birth day: {{ user_info.birth|date:'d-m-Y' }}</p>
+            </div>
+        </div>
+    </li>
+    </ul>
+    <form method="post">
+        <button type="submit" class="btn"><a href="{% url 'new-post' %}">New Post</a></button>
+    </form>
+    <ul class="list-articles">
+        {% if posts %}
+            {% for post in posts %}
+                <li>
+                    {% for photo in photos %}
+                        {% if photo.article_id == post.id %}
+                            <p><img class="img img-article-left thumb" src="{{ photo.image.url }}"></p>
+                        {% endif %}
+                    {% endfor %}
+
+                    <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+                    {% autoescape on %}
+                        {{ post.content|linebreaks|truncatewords:50 }}
+                    {% endautoescape %}
+                    <div class="article-panel">
+
+                        <p class="first">Creator: {{ user.username }}</p>
+
+                        <p class="last">Date: {{ post.time_update|date:'d-m-Y H:i:s' }}</p>
+                    </div>
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+
+{% endblock %}

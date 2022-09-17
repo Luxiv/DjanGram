@@ -1,0 +1,125 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+    <link type="text/css" href="{% static 'main/css/styles.css' %}" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="shortcut icon" href="{% static 'main/images/main.ico' %}" type="image/x-icon"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+<table class="table-page" border=0 cellpadding="0" cellspacing="0">
+    <tr>
+        <td valign=top>
+            {% block mainmenu %}
+                <div class="header">
+                    <ul id="mainmenu" class="mainmenu">
+                        <li class="logo"><a href="{% url 'timeline' %}">
+                            <div class="logo"></div>
+                        </a></li>
+                        {% for m in menu %}
+
+                            <li><a href="{% url m.url_name %}">{{ m.title }}</a></li>
+
+                        {% endfor %}
+                        <!--  -->
+                        {% if request.user.is_authenticated %}
+
+                            <li class="last"><a href="{% url 'profile' user.username %}"> {{ user.username }} </a> | <a
+                                    href="{% url 'logout' %}">Logout</a></li>
+
+                        {% else %}
+                            <li class="last"><a href="{% url 'registration' %}">Registration</a> | <a
+                                    href="{% url 'login' %}">Login</a></li>
+                        {% endif %}
+                    </ul>
+                    <div class="clear"></div>
+                </div>
+            {% endblock mainmenu %}
+
+
+            <table class="table-content" border=0 cellpadding="0" cellspacing="0">
+                <tr>
+                    <!-- Sidebar left -->
+                    <td valign="top" class="left-chapters">
+
+                        <ul id="leftchapters">
+                            {% if request.user.is_authenticated %}
+                                {% if cat_selected == 0 %}
+                                    <li class="selected">My account</li>
+                                {% else %}
+                                    <li><a href="{% url 'profile' user.username %}">My account</a></li>
+                                {% endif %}
+                                {% if cat_selected == 0 %}
+                                    <li class="selected">Friends</li>
+                                {% else %}
+                                    <li><a href="{% url 'friends' %}">Friends</a></li>
+                                {% endif %}
+                                {% if cat_selected == 0 %}
+                                    <li class="selected">Recommended Friends</li>
+                                {% else %}
+                                    <li><a href="{% url 'recommendations' %}">Recommended Friends</a></li>
+                                {% endif %}
+                            {% else %}
+                                {% if cat_selected == 0 %}
+                                    <li class="selected">Login</li>
+                                {% else %}
+                                    <li><a href="{% url 'login' %}">Login</a></li>
+                                {% endif %}
+                            {% endif %}
+                        </ul>
+                    </td>
+                    <!-- End Sidebar -->
+                    <td valign="top" class="content">
+                        <!-- Хлебные крошки -->
+                        {% block breadcrumbs %}
+                        {% endblock %}
+
+                        <!-- block content -->
+                        <div class="content-text">
+                            {% block content %}
+                            {% endblock %}
+                            {% if page_obj.has_other_pages %}
+                                <nav class="list-topic">
+                                    <ul>
+                                        {% for page in page_obj.paginator.page_range %}
+                                            {% if page_obj.number == page %}
+                                                <li class="page-num page-num-selected">{{ page }}</li>
+                                            {% else %}
+                                                <li class="page-num">
+                                                    <a href="?page={{ page }}">{{ page }}</a>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </nav>
+                            {% endif %}
+                        </div>
+                        <!-- end block content -->
+
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <!-- Footer -->
+    <tr>
+        <td valign=top>
+            <div id="footer">
+                <p>&copy; 2022 Partial or complete copying of
+                    information from this site for distribution
+                    on other resources, including paper ones, is strictly prohibited</p>
+            </div>
+        </td>
+    </tr>
+</table>
+<!-- end footer and page -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+        crossorigin="anonymous"></script>
+</body>
+</html>

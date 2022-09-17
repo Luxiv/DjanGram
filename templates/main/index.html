@@ -1,0 +1,35 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+    {% if request.user.is_authenticated %}
+        <ul class="list-articles">
+            {% if posts %}
+                {% for post in posts %}
+                    <li>
+                        <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+
+                        {% for photo in photos %}
+                            {% if photo.article_id == post.id %}
+                                <p><img class="img img-article-left thumb" src="{{ photo.image.url }}"></p>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% autoescape on %}
+                            {{ post.content|linebreaks|truncatewords:50 }}
+                        {% endautoescape %}
+                        <div class="article-panel">
+                            <p class="first link-read-post"><a href="{{ post.creator.get_absolute_url }}">
+                                Creator: {{ post.creator }}</a></p>
+                            <p class="last">Updated: {{ post.time_update|date:'d-m-Y H:i:s' }}</p>
+                        </div>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    {% endif %}
+
+{% endblock %}

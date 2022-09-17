@@ -1,0 +1,48 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+    {% if friends %}
+        <h1>Your Friends</h1>
+    {% else %}
+        <h1>You have eny friends</h1>
+    {% endif %}
+    <ul class="list-articles">
+        {% for user_info in friends %}
+
+            <li>
+                <div class="alert alert-warning mt-2">
+
+                    <div class="article-panel">
+                        <p class="first"><a href="{{ user_info.get_absolute_url }}">Login: {{ user_info.slug }}</a></p>
+                    </div>
+                    {% if user_info.avatar %}
+                        <p><img class="img-article-left thumb" src="{{ user_info.avatar.url }}" alt="Mine Avatar"></p>
+                    {% else %}
+                        <p><img class="img-article-left thumb" src="{% static 'main/images/user.png' %}" width="300"
+                                height="300" alt="Mine Avatar"></p>
+                    {% endif %}
+                    <div>
+                        <p><small><em>Full
+                            name: </em></small><strong>{{ user_info.first_name }} {{ user_info.last_name }} </strong>
+                        </p>
+                        <p><small><em>Email: </em></small>{{ user_info.email }}</p>
+                        <p><small><em>About my: </em></small>{{ user_info.about_user }}</p>
+                    </div>
+                </div>
+            </li>
+            <li>
+
+                <div class="article-panel">
+                    <p class="last">Birth day: {{ user_info.birth|date:'d-m-Y' }}</p>
+                </div>
+            </li>
+
+        {% endfor %}
+    </ul>
+
+{% endblock %}

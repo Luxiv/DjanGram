@@ -1,0 +1,17 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+    <ul class="list-articles">
+        <li>
+            <div class="alert alert-warning mt-2">
+                <div class="article-panel">
+                    <div class="article-panel">
+                        <p class="first"><a href="{% url 'profile_info' user.username %}">Please add profile info</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+{% endblock %}

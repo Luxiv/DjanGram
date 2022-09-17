@@ -1,0 +1,47 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+
+    <h1>Recommendations</h1>
+    <ul class="list-articles">
+        {% for user_info in users %}
+
+            <li>
+                <div class="alert alert-warning mt-2">
+
+                    <div class="article-panel">
+                        <p class="first"><a href="{{ user_info.get_absolute_url }}">Login: {{ user_info.slug }}</a></p>
+                    </div>
+                    {% if user_info.avatar %}
+                        <p><img class="img-article-left thumb" src="{{ user_info.avatar.url }}" alt="Mine Avatar"></p>
+                    {% else %}
+                        <p><img class="img-article-left thumb" src="{% static 'main/images/user.png' %}" width="300"
+                                height="300" alt="Mine Avatar"></p>
+                    {% endif %}
+                    <div>
+                        <p><small><em>Full
+                            name: </em></small><strong>{{ user_info.first_name }} {{ user_info.last_name }} </strong>
+                        </p>
+                        <p><small><em>Email: </em></small>{{ user_info.email }}</p>
+                        <p><small><em>Birth day: </em></small>{{ user_info.birth|date:'d-m-Y' }}</p>
+                        <p><small><em>About my: </em></small>{{ user_info.about_user }}</p>
+                    </div>
+                </div>
+                <div class="btn-group-sm">
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" name="to_friend" value="{{ user_info.username }}" class="btn"><a>Add to
+                            Friends {{ user_info.username }}</a>
+                        </button>
+                    </form>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

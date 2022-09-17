@@ -1,0 +1,45 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+    <ul class="list-articles">
+
+        <li>
+            <h2>{{ post.title }}</h2>
+                {% for photo in photos %}
+                <p><img class="img" src="{{ photo.image.url }}"></p>
+                {% endfor %}
+
+
+            <div style="display:flex">
+                {% for tag in post.tags.all %}
+                    <a href="{% url 'tagged' tag.slug %}" class="badge-info">#{{ tag }}</a>
+                {% endfor %}
+            </div>
+
+            {% autoescape on %}
+                {{ post.content }}
+            {% endautoescape %}
+            <div class="article-panel">
+                <p class="first link-read-post"><a href="{{ post.creator.get_absolute_url }}">
+                    Creator: {{ post.creator }}</a></p>
+                <p class="last">Updated: {{ post.time_update|date:'d-m-Y H:i:s' }}</p>
+            </div>
+            <hr>
+            <form action="{% url 'like_post' post.slug %}" method="POST">
+                {% csrf_token %}
+                {% if liked %}
+                    <button type="submit" name="post_slug" value="{{ post.slug }}">Unlike</button> - {{ total_likes }}
+                    Likes
+                {% else %}
+                    <button type="submit" name="post_slug" value="{{ post.slug }}">Like</button> - {{ total_likes }}
+                    Likes
+                {% endif %}
+            </form>
+        </li>
+
+    </ul>
+{% endblock %}
